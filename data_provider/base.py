@@ -863,6 +863,7 @@ class DataFetcherManager:
         from .baostock_fetcher import BaostockFetcher
         from .yfinance_fetcher import YfinanceFetcher
         from .longbridge_fetcher import LongbridgeFetcher
+        from .massive_fetcher import MassiveFetcher
         # 创建所有数据源实例（优先级在各 Fetcher 的 __init__ 中确定）
         efinance = EfinanceFetcher()
         akshare = AkshareFetcher()
@@ -871,6 +872,7 @@ class DataFetcherManager:
         baostock = BaostockFetcher()
         yfinance = YfinanceFetcher()
         longbridge = LongbridgeFetcher()  # 长桥（美股/港股兜底，懒加载）
+        massive = MassiveFetcher()        # Massive.com（仅美股，需 MASSIVE_API_KEY）
 
         # 初始化数据源列表
         self._ensure_concurrency_guards()
@@ -883,6 +885,7 @@ class DataFetcherManager:
                 baostock,
                 yfinance,
                 longbridge,
+                massive,
             ]
 
             # 按优先级排序（Tushare 如果配置了 Token 且初始化成功，优先级为 0）
@@ -948,12 +951,19 @@ class DataFetcherManager:
 
         # 美股（含美股指数）使用 Longbridge/YFinance 特殊路由；港股走下方通用数据源循环
         if is_us:
+            from .massive_fetcher import is_massive_configured
+
             prefer_lb = self._longbridge_preferred() and not is_us_index
             source_order = (
                 ["LongbridgeFetcher", "YfinanceFetcher"]
                 if prefer_lb
                 else ["YfinanceFetcher", "LongbridgeFetcher"]
             )
+            # MassiveFetcher 仅在配置了 MASSIVE_API_KEY 时插入；置于 YfinanceFetcher 之前作为美股优先 fallback。
+            # Longbridge 提供实时行情时仍是首选；Massive 主要分担 yfinance 的负载。
+            if is_massive_configured():
+                yf_idx = source_order.index("YfinanceFetcher")
+                source_order.insert(yf_idx, "MassiveFetcher")
             market_label = "美股指数" if is_us_index else "美股"
 
             for src_name in source_order:

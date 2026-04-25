@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 <!-- 新条目格式：- [类型] 描述（类型取值：新功能/改进/修复/文档/测试/chore）-->
+- [新功能] 新增 Massive.com（Polygon 兼容 REST）作为美股 fallback 数据源；配置 `MASSIVE_API_KEY` 后自动加入 `[Longbridge?, Massive, Yfinance]` 链路，未配置时行为不变。仅美股，个人 tier 数据约 15 分钟延迟
 - [新功能] Web 首页历史报告区新增重新分析入口，支持基于原始 prompt 重做同一只股票同日期的分析
 <!-- 每条独立一行追加到本段末尾，无需分类标题，合并时冲突最小 -->
 - [新功能] Windows/macOS 桌面端新增 GitHub Release 更新提醒，启动后自动检测新版本并支持从设置页手动检查后跳转下载页
