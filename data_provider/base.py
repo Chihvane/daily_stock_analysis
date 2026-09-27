@@ -862,7 +862,9 @@ class DataFetcherManager:
         from .baostock_fetcher import BaostockFetcher
         from .yfinance_fetcher import YfinanceFetcher
         from .longbridge_fetcher import LongbridgeFetcher
+        from .eodhd_fetcher import EodhdFetcher
         # 创建所有数据源实例（优先级在各 Fetcher 的 __init__ 中确定）
+        eodhd = EodhdFetcher()   # 港股 + 沪深A股日线 (P0, 列表头); 其他市场立即让位
         efinance = EfinanceFetcher()
         akshare = AkshareFetcher()
         tushare = TushareFetcher()  # 会根据 Token 配置自动调整优先级
@@ -875,6 +877,7 @@ class DataFetcherManager:
         self._ensure_concurrency_guards()
         with self._fetchers_lock:
             self._fetchers = [
+                eodhd,
                 efinance,
                 akshare,
                 tushare,
