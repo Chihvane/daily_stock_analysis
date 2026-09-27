@@ -942,7 +942,9 @@ class Config:
             elif anthropic_api_keys:
                 litellm_model = f'anthropic/{_anthropic_model_name}'
             elif deepseek_api_keys:
-                litellm_model = 'deepseek/deepseek-chat'
+                # litellm 'deepseek/' 前缀直连 DeepSeek 官方 API; 使用 deepseek-v4-pro
+                # 滚动别名 (不要换成带日期后缀的模型 id)
+                litellm_model = 'deepseek/deepseek-v4-pro'
             elif openai_api_keys:
                 # For openai-compatible models, add prefix only if not already prefixed
                 if '/' not in _openai_model_name:

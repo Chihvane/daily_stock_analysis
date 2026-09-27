@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - [测试] 补充 `TushareFetcher._normalize_data` 港股与 A 股/ETF 单位处理的单元测试。
 - [新功能] 集成 Anspire Search 作为可选语义搜索后端; 配置 `ANSPIRE_*` 可使用Anspire Search获取实时行情及新闻资讯，未配置时行为与此前一致。Anspire Search请使用 `tests/test_anspire_search.py`（手动脚本）。
 - [新功能] 新增可选 EODHD 数据源（`data_provider/eodhd_fetcher.py`，优先级 0）：港股与沪深 A 股日线；配置 `EODHD_API_KEY`（或 `EODHD_ENV_FILE` 指向另一份 .env）启用；未配置时该源每次调用立即让位（会记一条缺少 key 的日志）；自动丢弃 999999 哨兵行；价格为 EODHD 原始 OHLC（未复权）。
+- [改进] DeepSeek 默认模型改为 `deepseek-v4-pro`。
 
 ## [3.12.0] - 2026-04-01
 
